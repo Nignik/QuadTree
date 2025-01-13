@@ -3,7 +3,7 @@
 #include "include.h"
 #include <cmath>
 
-inline float distance(Point p, Rect r)
+inline float distance(Vec2 p, Rect r)
 {
 	float dist = 0;
 	if (p.x < r.x + r.w)

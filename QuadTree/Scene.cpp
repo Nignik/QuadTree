@@ -1,5 +1,9 @@
 #include "Scene.h"
 
+#include "VelocityComponent.h"
+#include "PositionComponent.h"
+#include "MovementSystem.h"
+
 #include <random>
 
 
@@ -9,21 +13,22 @@ Scene::Scene()
 	std::mt19937 gen(rd());
 	std::uniform_real_distribution<float> dis_x(0.f, 1280.f);
 	std::uniform_real_distribution<float> dis_y(0.f, 720.f);
+	std::uniform_real_distribution<float> dis_norm(0.f, 1.f);
 
 	auto& world = Hori::World::GetInstance();
 
 	int numOfPoints = 30;
 	m_pointEntities.reserve(numOfPoints);
-	std::vector<Point> points;
+	std::vector<Vec2> points;
 	points.reserve(numOfPoints);
 	for (int i = 0; i < numOfPoints; i++)
 	{
 		auto entity = world.CreateEntity();
 		points.emplace_back(dis_x(gen), dis_y(gen));
-		world.AddComponents<>(entity, points.back());
+		world.AddComponents(entity, PositionComponent{ points.back() });
+		world.AddComponents(entity, VelocityComponent{ dis_norm(gen), dis_norm(gen) });
 		m_pointEntities.push_back(entity);
 	}
-
 
 	m_quadTree = QuadTree(points, Rect{ 0.f, 0.f, 1280.f, 720.f });
 }
@@ -40,10 +45,10 @@ void Scene::Draw(SDL_Renderer* renderer)
 	SDL_SetRenderDrawColor(renderer, 255, 0, 0, SDL_ALPHA_OPAQUE);
 	for (auto& pEntity : m_pointEntities)
 	{
-		auto p = world.GetComponent<Point>(pEntity);
+		auto p = world.GetComponent<PositionComponent>(pEntity)->value;
 
 		float scale = 5.f;
-		Rect r{ p->x - scale, p->y - scale, scale, scale };
+		Rect r{ p.x - scale, p.y - scale, scale, scale };
 		SDL_RenderFillRect(renderer, &r);
 	}
 

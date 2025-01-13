@@ -8,13 +8,13 @@
 class QuadTreeNode
 {
 public:
-	QuadTreeNode(std::vector<Point>& points, Rect bounds)
+	QuadTreeNode(std::vector<Vec2>& points, Rect bounds)
 		: bounds(bounds)
 	{
 		if (points.size() <= 1 || bounds.w <= 1 || bounds.h <= 1)
 			return;
 		
-		std::vector<Point> nwPoints, nePoints, swPoints, sePoints;
+		std::vector<Vec2> nwPoints, nePoints, swPoints, sePoints;
 		Rect nwRect{ bounds.x, bounds.y, bounds.w / 2, bounds.h / 2};
 		Rect neRect{bounds.x + bounds.w / 2,bounds.y,bounds.w / 2,bounds.h / 2};
 		Rect swRect{bounds.x,bounds.y + bounds.h / 2,bounds.w / 2,bounds.h / 2};
@@ -45,7 +45,7 @@ public:
 	{
 	}
 
-	QuadTree(std::vector<Point>& points, Rect bounds)
+	QuadTree(std::vector<Vec2>& points, Rect bounds)
 	{
 		if (points.size() <= 0)
 			return;
