@@ -41,6 +41,10 @@ public:
 class QuadTree
 {
 public:
+	QuadTree()
+	{
+	}
+
 	QuadTree(std::vector<Point>& points, Rect bounds)
 	{
 		if (points.size() <= 0)
