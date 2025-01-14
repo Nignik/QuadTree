@@ -5,9 +5,10 @@
 
 #include "include.h"
 #include "Scene.h"
-
-constexpr int screenWidth = 1280;
-constexpr int screenHeight = 720;
+#include "WindowDataComponent.h"
+#include "MovementSystem.h"
+#include "FrameDataSystem.h"
+#include "FrameDataComponent.h"
 
 static SDL_Window* window = NULL;
 static SDL_Renderer* renderer = NULL;
@@ -23,11 +24,19 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
         return SDL_APP_FAILURE;
     }
 
-    if (!SDL_CreateWindowAndRenderer("QuadTree", screenWidth, screenHeight, 0, &window, &renderer))
+    Hori::World& world = Hori::World::GetInstance();
+    world.AddSingletonComponent(WindowDataComponent());
+    world.AddSingletonComponent(FrameDataComponent());
+    auto windowData = world.GetSingletonComponent<WindowDataComponent>();
+
+    if (!SDL_CreateWindowAndRenderer("QuadTree", windowData->windowWidth, windowData->windowHeight, 0, &window, &renderer))
     {
         SDL_Log("Couldn't create window/renderer: %s", SDL_GetError());
         return SDL_APP_FAILURE;
     }
+
+    world.AddSystem<MovementSystem>(MovementSystem());
+    world.AddSystem<FrameDataSystem>(FrameDataSystem());
 
     return SDL_APP_CONTINUE;
 }
@@ -47,6 +56,10 @@ SDL_AppResult SDL_AppIterate(void* appstate)
 
     SDL_SetRenderDrawColorFloat(renderer, 0.0f, 0.0f, 0.2f, SDL_ALPHA_OPAQUE_FLOAT);
     SDL_RenderClear(renderer);
+
+    Hori::World& world = Hori::World::GetInstance();
+    // Ummmm... thats kidna messed up, i cant pass that dt, as frame data system needs to be updated before. The current frame will use dt from the previous frame (possibly bad)
+    world.UpdateSystems(world.GetSingletonComponent<FrameDataComponent>()->dt);
 
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
     scene.Update(0.f, renderer);

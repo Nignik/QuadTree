@@ -5,10 +5,11 @@ add_executable(QuadTree ${SOURCES})
 
 find_package(imgui CONFIG REQUIRED)
 find_package(SDL3 CONFIG REQUIRED)
+find_package(glm CONFIG REQUIRED)
 find_package(HECS REQUIRED)
 
 
-target_link_libraries(QuadTree PRIVATE SDL3::SDL3 imgui::imgui HECS::HECS)
+target_link_libraries(QuadTree PRIVATE SDL3::SDL3 imgui::imgui HECS::HECS glm::glm)
 
 add_custom_command(
     TARGET QuadTree POST_BUILD

@@ -1,12 +1,11 @@
 #pragma once
 
-#include <World.h>
+#include "include.h"
 
-class MovementSystem : public Hori::System
+class FrameDataSystem : public Hori::System
 {
 public:
 	void Update(float dt) override;
 
 private:
-
 };

@@ -20,12 +20,13 @@ public:
 		Rect swRect{bounds.x,bounds.y + bounds.h / 2,bounds.w / 2,bounds.h / 2};
 		Rect seRect{bounds.x + bounds.w / 2,bounds.y + bounds.h / 2,bounds.w / 2,bounds.h / 2};
 
-		for (auto& p : points)
+		for (auto& point : points)
 		{
-			if (PointInRect(&p, &nwRect)) nwPoints.push_back(p);
-			else if (PointInRect(&p, &neRect)) nePoints.push_back(p);
-			else if (PointInRect(&p, &swRect)) swPoints.push_back(p);
-			else if (PointInRect(&p, &seRect)) sePoints.push_back(p);
+			auto p = vecToPoint(point);
+			if (PointInRect(&p, &nwRect)) nwPoints.push_back(point);
+			else if (PointInRect(&p, &neRect)) nePoints.push_back(point);
+			else if (PointInRect(&p, &swRect)) swPoints.push_back(point);
+			else if (PointInRect(&p, &seRect)) sePoints.push_back(point);
 		}
 
 		if (nwPoints.size() > 0) nw = std::make_shared<QuadTreeNode>(nwPoints, nwRect);
