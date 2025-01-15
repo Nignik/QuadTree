@@ -14,7 +14,7 @@ public:
 	void Update(float dt, SDL_Renderer* renderer);
 
 private:
-	QuadTree m_quadTree;
+	std::shared_ptr<QuadTreeNode> m_quadTree{};
 	std::vector<Hori::Entity> m_pointEntities{};
 
 	void Draw(SDL_Renderer* renderer);
